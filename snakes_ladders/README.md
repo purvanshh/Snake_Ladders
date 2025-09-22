@@ -56,7 +56,7 @@ classDiagram
 	}
 
 	class Board {
-		-List~Tile~ tiles
+		-List tiles
 		-int size
 		+Board(int size)
 		-void setupBoard()
@@ -79,7 +79,7 @@ classDiagram
 		+String toString()
 	}
 
-	interface IRollable {
+	class IRollable <<interface>> {
 		+int roll()
 	}
 
@@ -92,7 +92,7 @@ classDiagram
 		+int getSides()
 	}
 
-	interface IRuleEngine {
+	class IRuleEngine <<interface>> {
 		+void applyRules(Player player, Board board)
 	}
 
@@ -101,13 +101,13 @@ classDiagram
 	}
 
 	class Game {
-		-List~Player~ players
+		-List players
 		-Board board
 		-IRollable roller
 		-IRuleEngine ruleEngine
 		-int currentPlayerIndex
 		-Player winner
-		+Game(List~Player~, Board, IRollable, IRuleEngine)
+		+Game(List, Board, IRollable, IRuleEngine)
 		+void start()
 		+void playTurn(Player p)
 		+boolean hasWinner()
@@ -131,8 +131,8 @@ classDiagram
 	Game "1" o-- "1" Board : board
 	Game "1" o-- "1" IRollable : roller
 	Game "1" o-- "1" IRuleEngine : ruleEngine
-	DefaultRuleEngine ..> Player : applyRules(player, board)
-	DefaultRuleEngine ..> Board : applyRules(player, board)
+	DefaultRuleEngine --> Player : applyRules(player, board)
+	DefaultRuleEngine --> Board : applyRules(player, board)
 
 ```
 
