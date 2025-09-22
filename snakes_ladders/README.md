@@ -1,6 +1,3 @@
-Here’s a **ready-to-use `README.md`** you can drop directly into the root of your **snakes\_ladders** project.
-It includes build/run instructions, project notes, and the Mermaid UML diagram.
-
 ```markdown
 # Snakes & Ladders – Java (Console)
 
@@ -41,17 +38,41 @@ java -cp out com.snakesladders.Main
 * Uses a default board with preset snakes and ladders.
 * **Overshoot rule**: if a roll would move past the final tile, the player stays in place.
 
+### Implementation Details & Clarifications
+
+These details reflect the current source code:
+
+* **Tile / SpecialTile**
+
+  * `Tile.isSpecial()` is a concrete method returning `false` by default.
+    `SpecialTile` overrides it to return `true`.
+* **Player**
+
+  * The constructor sets the starting position to **1**.
+* **Board**
+
+  * Uses **1-based indexing**: index `0` is stored as `null`.
+  * Enforces a **minimum size of 10**.
+  * `setupBoard()` first populates the board with `NormalTile`s, then replaces some with `SpecialTile`s (snakes and ladders).
+* **DefaultRuleEngine**
+
+  * `applyRules` checks for `null` tiles and, if the player lands on a `SpecialTile`, moves the player to that tile’s `endIndex`.
+
+All class and interface relationships in the UML diagram match the Java source:
+`NormalTile`, `Snake`, `Ladder`, `Board`, `IRollable`, `Dice`, `IRuleEngine`, `Game`, and `Main`.
+
 ---
 
 ## 🧩 UML Class Diagram
 
-Below is a Mermaid UML class diagram that mirrors the Java source.
+The diagram below describes the project structure.
 GitHub renders Mermaid automatically—just view this README in the repo.
 
 ```mermaid
 classDiagram
-    %% === Classes ===
+    %% === Abstract Classes ===
     class Tile {
+        <<abstract>>
         - int index
         + Tile(int index)
         + int getIndex()
@@ -59,12 +80,14 @@ classDiagram
     }
 
     class SpecialTile {
+        <<abstract>>
         - int endIndex
         + SpecialTile(int index, int endIndex)
         + int getEndIndex()
         + boolean isSpecial()
     }
 
+    %% === Concrete Classes ===
     class NormalTile {
         + NormalTile(int index)
     }
@@ -151,7 +174,7 @@ classDiagram
     IRollable <|.. Dice
     IRuleEngine <|.. DefaultRuleEngine
 
-    %% === Associations ===
+    %% === Associations (with cardinalities) ===
     Board "1" *-- "*" Tile : tiles
     Game "1" o-- "*" Player : players
     Game "1" o-- "1" Board : board
